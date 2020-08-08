@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import numpy as np
+import os
 
 def get_dataset():
     (train_images, train_labels), (_, _) = keras.datasets.mnist.load_data()
@@ -59,10 +60,19 @@ def main():
 
     print(generated_image)
 
-    generator.save('./mnist_model.h5')
+    save_model(generator, "mnist_model")
 
 
+def save_model(model, name):
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, f'../models/{name}.h5')
+    lite_filename = os.path.join(dirname, f'../tflite_models/{name}.tflite')
 
+    model.save(filename)
+
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    tflite_model = converter.convert()
+    open(lite_filename, "wb").write(tflite_model)
 
 if __name__ == "__main__":
     main()
