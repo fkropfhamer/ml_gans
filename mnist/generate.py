@@ -1,10 +1,11 @@
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
+from PIL import Image
 
 
 def main():
-    generator = keras.models.load_model('./mnist_model.h5')
+    generator = keras.models.load_model('./models/mnist_model.h5')
 
     noise = tf.random.normal([1, 100])
     generated_image = generator(noise, training=False)
@@ -18,7 +19,10 @@ def main():
     print(generated_image)
     print(generated_image.shape)
 
-    
+    im = Image.fromarray(generated_image, mode='L')
+
+    im.show()
+
     
 
 
